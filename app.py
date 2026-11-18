@@ -11,7 +11,7 @@ BASE = Path(__file__).resolve().parent
 DATABASE_URL = os.environ.get("DATABASE_URL", "").strip()
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = "postgresql://" + DATABASE_URL[11:]
-ADMIN_PASSWORD = os.environ.get("RBM_ADMIN_PASSWORD", "").strip()
+if os.environ.get("RBM_REQUIRE_POSTGRES", "false").lower() == "true" and not DATABASE_URL:\n    raise RuntimeError("Persistent online storage requires DATABASE_URL. Configure Neon PostgreSQL in Render before deploying.")\nADMIN_PASSWORD = os.environ.get("RBM_ADMIN_PASSWORD", "").strip()
 SECRET_KEY = os.environ.get("SECRET_KEY", "").strip()
 if not ADMIN_PASSWORD or not SECRET_KEY:
     raise RuntimeError("Configure RBM_ADMIN_PASSWORD and SECRET_KEY in Render secret environment variables.")
