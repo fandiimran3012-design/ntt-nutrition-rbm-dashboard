@@ -1,12 +1,12 @@
-# NTT Nutrition RBM – Git-backed Render Blueprint
-# NOTE: Both services use PAID plans. Review the charges and secure admin access
-# in Render before pressing Apply. Do not store secrets in GitHub.
+# Free deployment: Render Free web service + externally hosted Neon PostgreSQL Free.
+# This Blueprint does NOT provision a paid database.
+# Set DATABASE_URL and RBM_ADMIN_PASSWORD as private secrets in Render.
 services:
   - type: web
     name: ntt-nutrition-rbm
     runtime: python
     region: singapore
-    plan: starter
+    plan: free
     branch: main
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn --workers 2 --bind 0.0.0.0:$PORT app:app
@@ -19,13 +19,7 @@ services:
         sync: false
       - key: RBM_REQUIRE_HTTPS
         value: "true"
+      - key: RBM_REQUIRE_POSTGRES
+        value: "true"
       - key: DATABASE_URL
-        fromDatabase:
-          name: ntt-nutrition-rbm-postgres
-          property: connectionString
-databases:
-  - name: ntt-nutrition-rbm-postgres
-    plan: basic-256mb
-    region: singapore
-    databaseName: nutrition_rbm
-    user: nutrition_rbm_admin
+        sync: false
